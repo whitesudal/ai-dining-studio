@@ -1,0 +1,13 @@
+name: AI 다이닝 스튜디오 테스트
+address: 서울시 강남구
+phone: 010-0000-0000
+menu:
+  - name: 김치찌개
+    price: 9000
+  - name: 제육볶음
+    price: 11000
+  - name: 된장찌개
+    price: 8000
+  - name: 불고기
+    price: 13000
+
