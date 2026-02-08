@@ -1,0 +1,62 @@
+name: Auto Sync From Google Sheet
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
+
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r automation/requirements.txt
+
+      - name: Write credentials + config
+        env:
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+        run: |
+          mkdir -p automation/keys
+          echo "$GOOGLE_SERVICE_ACCOUNT_JSON" > automation/keys/service_account.json
+
+          cat > automation/config.yaml <<EOF2
+          google_sheet:
+            sheet_id: "${GOOGLE_SHEET_ID}"
+            worksheet_name: "시트1"
+          google_credentials: "automation/keys/service_account.json"
+          openai:
+            model: "gpt-4o-mini"
+          paths:
+            output_dir: "docs/output"
+            template_dir: "automation/templates"
+          EOF2
+
+      - name: Run main
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python automation/main.py
+
+      - name: Commit and push
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/output
+          git commit -m "auto: generate outputs from sheet"
+          git push
