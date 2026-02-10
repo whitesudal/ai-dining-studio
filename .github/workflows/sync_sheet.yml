@@ -54,6 +54,11 @@ jobs:
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
+                - name: Copy site files to docs
+        run: |
+          rm -rf docs/*
+          cp -r site/* docs/
+
           git add site/
           git diff --cached --quiet || git commit -m "Auto update from sheet"
           git push
