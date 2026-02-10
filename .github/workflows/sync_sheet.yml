@@ -31,17 +31,11 @@ jobs:
           mkdir -p automation/keys
           echo "$GOOGLE_SERVICE_ACCOUNT_JSON" > automation/keys/service_account.json
 
-      - name: Run script
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python automation/main.py
-
       - name: Create config.yaml
         env:
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         run: |
           cat > automation/config.yaml <<EOF
-
           google_sheet:
             sheet_id: "$GOOGLE_SHEET_ID"
             worksheet_name: "시트1"
@@ -49,21 +43,17 @@ jobs:
 
           openai:
             model: "gpt-4o-mini"
-
-          paths:
-            output_dir: "docs/output"
-            template_dir: "automation/templates"
           EOF
+
+      - name: Run script
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python automation/main.py
 
       - name: Commit and push if changed
         run: |
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No changes"
-            exit 0
-          fi
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/output
-          git commit -m "Auto: generate outputs from sheet"
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add site/
+          git diff --cached --quiet || git commit -m "Auto update from sheet"
           git push
