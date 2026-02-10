@@ -4,7 +4,14 @@ from oauth2client.service_account import ServiceAccountCredentials
 import os
 from datetime import datetime
 
-with open("automation/config.yaml", "r") as f:
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, "config.yaml")
+
+with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+    config = yaml.safe_load(f)
+
 
     config = yaml.safe_load(f)
 
