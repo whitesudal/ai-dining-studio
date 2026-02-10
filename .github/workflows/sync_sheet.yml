@@ -40,7 +40,8 @@ jobs:
         env:
           GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
         run: |
-          cat > config.yaml <<EOF
+          cat > automation/config.yaml <<EOF
+
           google_sheet:
             sheet_id: "$GOOGLE_SHEET_ID"
             worksheet_name: "시트1"
