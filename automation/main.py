@@ -47,3 +47,17 @@ for idx, row in enumerate(rows, start=2):
     sheet.update_cell(idx, 18, filepath)
 
 print("작업 완료")
+import shutil
+import os
+
+print("📁 Copying site → docs for GitHub Pages...")
+
+src = "site"
+dst = "docs"
+
+if os.path.exists(dst):
+    shutil.rmtree(dst)
+
+shutil.copytree(src, dst)
+
+print("✅ Site copied to docs successfully")
