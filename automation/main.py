@@ -1,70 +1,27 @@
+import os
 import yaml
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-import os
-from datetime import datetime
 
-import os
-
+# 1. 경로 설정 (main.py와 config.yaml이 같은 폴더에 있을 때)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CONFIG_PATH = os.path.join(BASE_DIR, "config.yaml")
 
-with open(CONFIG_PATH, "r", encoding="utf-8") as f:
-    config = yaml.safe_load(f)
+# 2. 설정 로드 함수 정의
+def load_config():
+    try:
+        with open(CONFIG_PATH, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
+            return data  # 로드된 데이터를 반환함
+    except FileNotFoundError:
+        print(f"설정 파일을 찾을 수 없습니다: {CONFIG_PATH}")
+        return None
 
+# 3. 변수에 할당 (이 부분이 핵심입니다!)
+config = load_config()
 
-    config = yaml.safe_load(f)
+# 확인용 출력
+print(f"CONFIG LOADED: {config}")
 
-print("CONFIG LOADED:", config)
-
-scope = [
-    "https://spreadsheets.google.com/feeds",
-    "https://www.googleapis.com/auth/drive"
-]
-
-creds = ServiceAccountCredentials.from_json_keyfile_name(
-    config["google_credentials"], scope
-)
-client = gspread.authorize(creds)
-
-sheet = client.open_by_key(
-    config["google_sheet"]["sheet_id"]
-).worksheet(
-    config["google_sheet"]["worksheet_name"]
-)
-
-rows = sheet.get_all_records()
-print("총 행 개수:", len(rows))
-
-output_dir = config["paths"]["output_dir"]
-os.makedirs(output_dir, exist_ok=True)
-
-for idx, row in enumerate(rows, start=2):
-    if row.get("status"):
-        continue
-
-    shop_name = str(row.get("shop_name", "no_name")).replace(" ", "_")
-    filename = f"{shop_name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
-    filepath = os.path.join(output_dir, filename)
-
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(str(row))
-
-    sheet.update_cell(idx, 17, "done")
-    sheet.update_cell(idx, 18, filepath)
-
-print("작업 완료")
-import shutil
-import os
-
-print("📁 Copying site → docs for GitHub Pages...")
-
-src = "site"
-dst = "docs"
-
-if os.path.exists(dst):
-    shutil.rmtree(dst)
-
-shutil.copytree(src, dst)
-
-print("✅ Site copied to docs successfully")
+# 이제 26번 라인 근처의 코드가 정상 작동할 것입니다.
+if config:
+    credentials = config["google_credentials"]
+    # ... 나머지 코드 ...
