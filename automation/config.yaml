@@ -1,7 +1,9 @@
 google_credentials: "service_account.json"
 
 google_sheet:
-  sheet_id: 1AbCdEfGhIjKlMnOpQrStUvWxYz1234567890
+  sheet_id: "1AbCdEfGhIjKlMnOpQrStuVwXyZ1234567890"
+
+
   worksheet_name: "시트1"
 
 paths:
