@@ -13,7 +13,7 @@ def load_config():
         return yaml.safe_load(f)
 
 def authenticate_google_sheets(config):
-    """구글 시트 인증을 수행하고 연결된 워크시트 객체를 반환하다."""
+    """구글 시트 인증을 수행하고 첫 번째 워크시트 객체를 반환하다."""
     scopes = [
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
@@ -27,22 +27,24 @@ def authenticate_google_sheets(config):
     # 시트 열기
     spreadsheet = client.open_by_key(config["google_sheet"]["sheet_id"])
     
-    # [진단] 연결 실패 시를 대비해 현재 시트의 모든 탭 이름을 출력하다
+    # [진단] 현재 시트의 모든 탭 이름을 출력하다
     all_tabs = [s.title for s in spreadsheet.worksheets()]
     print(f"🔍 시스템 인식 실제 탭 목록: {all_tabs}")
     
-    return spreadsheet.worksheet(config["google_sheet"]["worksheet_name"])
+    # 대안 1: 이름 대신 인덱스로 접근 (첫 번째 탭을 강제로 가져오다)
+    return spreadsheet.get_worksheet(0)
 
 if __name__ == "__main__":
     # 설정 로드
     config = load_config()
-    print(f"⚙️ 설정 로드 완료: {config['google_sheet']['worksheet_name']} 연결 시도 중...")
-
+    print(f"⚙️ 설정 로드 완료. 첫 번째 시트 연결 시도 중...")
+    
     try:
-        # 구글 시트 연결 및 데이터 로드
-        ws = authenticate_google_sheets(config)
-        print(f"✅ 성공: '{config['google_sheet']['worksheet_name']}' 연결 완료하다.")
+        worksheet = authenticate_google_sheets(config)
+        print(f"✅ 연결 성공: [{worksheet.title}] 탭을 읽어왔습니다.")
         
-        # 전체 데이터 읽기
-        rows = ws.get_all_records()
-        print(f"📊 총 {len(rows
+        # 테스트: A1 셀 내용 출력
+        print(f"📄 A1 셀 내용: {worksheet.acell('A1').value}")
+        
+    except Exception as e:
+        print(f"❌ 연결 실패: {e}")
