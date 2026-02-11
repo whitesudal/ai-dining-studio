@@ -1,7 +1,7 @@
 google_credentials: "service_account.json"
 
 google_sheet:
-  sheet_id: "여기에_구글시트주소의_d_와_edit_사이문자열붙여넣기"
+  sheet_id: "여기에복사한문자열붙여넣기"
   worksheet_name: "시트1"
 
 paths:
