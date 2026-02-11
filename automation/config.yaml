@@ -2,7 +2,7 @@ google_credentials: "service_account.json"
 
 google_sheet:
   sheet_id: "1JT0oFZTaqIm04aQKEq1itcvggALuy4t5VYipuv4x3xo"
-  worksheet_name: "시트 1"
+  worksheet_name: "낙지마실"
 
 paths:
   output_dir: "output"
