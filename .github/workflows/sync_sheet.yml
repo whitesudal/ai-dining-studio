@@ -36,6 +36,5 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
-          git diff --quiet && git diff --staged --quiet || git commit -m "낙지마실 데이터 수동 업데이트"
+          git diff --quiet && git diff --staged --quiet || git commit -m "낙지마실 데이터 자동 업데이트"
           git push
-
