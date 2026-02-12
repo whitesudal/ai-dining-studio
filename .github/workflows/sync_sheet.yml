@@ -1,64 +1,41 @@
-name: Sync Sheet to Site
+name: 낙지마실 실제 메뉴(낙곱새) 수동 반영
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 */6 * * *"
-
-permissions:
-  contents: write
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: '3.9'
 
       - name: Install dependencies
-        run: pip install -r automation/requirements.txt
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas google-auth google-auth-oauthlib google-auth-httplib2 google-api-python-client pyyaml
 
-      - name: Write Google credentials
+      - name: Run sync script
         env:
-          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          SHEET_JSON: ${{ secrets.SHEET_JSON }}
         run: |
-          mkdir -p automation/keys
-          echo "$GOOGLE_SERVICE_ACCOUNT_JSON" > automation/keys/service_account.json
+          echo "$SHEET_JSON" > service_account.json
+          python scripts/sync_sheets.py
+          rm service_account.json
 
-      - name: Create config.yaml
-        env:
-          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+      - name: Commit and push changes
         run: |
-          cat > automation/config.yaml <<EOF
-          google_sheet:
-            sheet_id: "$GOOGLE_SHEET_ID"
-            worksheet_name: "시트1"
-            google_credentials: "automation/keys/service_account.json"
-
-          openai:
-            model: "gpt-4o-mini"
-          EOF
-
-      - name: Run script
-        env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        run: python automation/main.py
-
-      - name: Commit and push if changed
-        run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-                - name: Copy site files to docs
-        run: |
-          rm -rf docs/*
-          cp -r site/* docs/
-
-          git add site/
-          git diff --cached --quiet || git commit -m "Auto update from sheet"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git diff --quiet && git diff --staged --quiet || git commit -m "낙지마실 데이터 수동 업데이트"
           git push
+
