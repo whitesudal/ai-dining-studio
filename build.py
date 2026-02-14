@@ -20,16 +20,14 @@ FALLBACK_HTML = """<!doctype html>
 <body>
   <h1>AI Dining Studio</h1>
   <p class="muted">index.html 템플릿을 찾지 못해 기본 페이지로 생성한다.</p>
-
   <div class="card">
     <h2>빌드 상태</h2>
     <ul>
-      <li>menu.yml: {menu_status}</li>
+      <li>데이터: {menu_status}</li>
       <li>json 파일 수: {json_count}개</li>
       <li>출력: dist/index.html</li>
     </ul>
   </div>
-
   <div class="card">
     <h2>해결 방법</h2>
     <ol>
@@ -42,21 +40,34 @@ FALLBACK_HTML = """<!doctype html>
 """
 
 def build_site():
-    # 1) menu.yml 읽기 (없어도 진행)
-    data_path = "data/menu.yml"
-    if not os.path.exists(data_path):
-        print(f"Error: {data_path} not found. Using empty data.")
-        menu_data = []
-        menu_status = "없음, 빈 데이터로 진행"
-    else:
+    # 1) 데이터 읽기 - JSON 우선, 없으면 YAML
+    menu_data = []
+    menu_status = "없음"
+    
+    json_path = "data/chungchun_ai.json"
+    yaml_path = "data/menu.yml"
+    
+    if os.path.exists(json_path):
         try:
-            with open(data_path, "r", encoding="utf-8") as f:
-                menu_data = yaml.safe_load(f) or []
-            menu_status = "로드 성공"
+            with open(json_path, "r", encoding="utf-8") as f:
+                menu_data = json.load(f)
+            menu_status = f"{json_path} 로드 성공"
+            print(f"Loaded data from {json_path}")
         except Exception as e:
-            print(f"Error: menu.yml read failed ({type(e).__name__}). Using empty data.")
-            menu_data = []
-            menu_status = "읽기 오류, 빈 데이터로 진행"
+            print(f"Error: {json_path} read failed ({type(e).__name__}).")
+            menu_status = "JSON 읽기 오류"
+    elif os.path.exists(yaml_path):
+        try:
+            with open(yaml_path, "r", encoding="utf-8") as f:
+                menu_data = yaml.safe_load(f) or []
+            menu_status = f"{yaml_path} 로드 성공"
+            print(f"Loaded data from {yaml_path}")
+        except Exception as e:
+            print(f"Error: {yaml_path} read failed ({type(e).__name__}).")
+            menu_status = "YAML 읽기 오류"
+    else:
+        print("Error: No data file found. Using empty data.")
+        menu_status = "데이터 파일 없음"
 
     # 2) data 폴더의 json 개수 세기 (fallback에 표시용)
     json_count = 0
@@ -98,8 +109,7 @@ def build_site():
     # 8) dist/index.html 저장
     with open("dist/index.html", "w", encoding="utf-8") as f:
         f.write(output)
+    print(f"Build ok: dist/index.html generated from template_dir='{template_dir}'.")
 
-    print(f"Build ok: dist/index.html generated from template_dir='{template_dir}' and '{data_path}'.")
 
-if __name__ == "__main__":
-    build_site()
+build_site()
