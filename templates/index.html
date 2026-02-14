@@ -10,32 +10,44 @@
     .meta { color: #555; font-size: 14px; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { text-align: left; border-bottom: 1px solid #eee; padding: 8px; }
+    .description { color: #666; font-size: 13px; margin-top: 4px; }
   </style>
 </head>
 <body>
   <h1>AI Dining Studio</h1>
-  <p class="meta">YAML 데이터로 자동 생성한 식당 페이지</p>
+  <p class="meta">JSON 데이터로 자동 생성한 식당 페이지</p>
 
-  {% for r in restaurants %}
+  {% for name, r in menu.items() %}
   <div class="card">
-    <h2>{{ r.name }}</h2>
-    <div class="meta">{{ r.address }} · {{ r.phone }}</div>
+    <h2>{{ name }}</h2>
+    <div class="meta">{{ r.region }} · {{ r.tel }}</div>
+    <div class="meta">{{ r.landmark }} | {{ r.category }}</div>
 
     <table>
       <thead>
         <tr><th>메뉴</th><th>가격</th></tr>
       </thead>
       <tbody>
-        {% for m in r.menu %}
         <tr>
-          <td>{{ m.name }}</td>
-          <td>{{ "{:,}".format(m.price) }}원</td>
+          <td>{{ r.menu1 }}<div class="description">{{ r.method1 }}</div></td>
+          <td>{{ r.menu1_price }}</td>
         </tr>
-        {% endfor %}
+        <tr>
+          <td>{{ r.menu2 }}<div class="description">{{ r.method2 }}</div></td>
+          <td>{{ r.menu2_price }}</td>
+        </tr>
+        <tr>
+          <td>{{ r.menu3 }}<div class="description">{{ r.method3 }}</div></td>
+          <td>{{ r.menu3_price }}</td>
+        </tr>
       </tbody>
     </table>
+
+    <p class="meta" style="margin-top: 12px;">
+      💰 {{ r.price_level }}<br>
+      👥 {{ r.audience }}
+    </p>
   </div>
   {% endfor %}
 </body>
 </html>
-
