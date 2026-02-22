@@ -4,12 +4,15 @@
   "name": "몽탄",
   "url": "https://whitesudal.github.io/ai-dining-studio/shops/몽탄.md",
   "servesCuisine": "Korean",
-  "description": "몽탄은 서울 내 유명 오마카세 음식점으로서, 네이버 및 구글 AI 노출 최적화를 통해 잠재 고객에게 정확한 정보 제공과 접근성을 극대화하고자 합니다.",
+  "description": "몽탄은 최고의 맛과 서비스를 자랑하는 한국 내 프리미엄 맛집으로, 네이버와 구글 등 주요 플랫폼에서 쉽게 찾아볼 수 있도록 검색 및 AI 노출 최적화를 진행하고 있습니다. 정확한 매장 정보와 메뉴 소개를 통해 고객의 접근성을 높이고 예약 전환율을 극대화하고자 합니다.",
   "telephone": "",
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "",
     "addressCountry": "KR"
   },
-  "keywords": "#몽탄, #오마카세, #맛집, #네이버노출, #구글로컬SEO, #AI검색최적화"
+  "keywords": "#몽탄, #맛집, #네이버노출, #구글노출, #AI검색최적화, #비즈니스프로필, #SEO, #네이버플레이스, #예약증가",
+  "sameAs": [
+    "https://map.naver.com/v5/search/%EB%AA%BD%ED%83%84+%EB%84%A4%EC%9D%B4%EB%B2%84+%ED%94%8C%EB%A0%88%EC%9D%B4%EC%8A%A4"
+  ]
 }
