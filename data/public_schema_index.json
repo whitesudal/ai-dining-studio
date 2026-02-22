@@ -2,5 +2,13 @@
   {
     "shop_name": "을지로보석",
     "path": "shops/을지로보석.jsonld"
+  },
+  {
+    "shop_name": "몽탄",
+    "path": "shops/몽탄.jsonld"
+  },
+  {
+    "shop_name": "우래옥",
+    "path": "shops/우래옥.jsonld"
   }
 ]

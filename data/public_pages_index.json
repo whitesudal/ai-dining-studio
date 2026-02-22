@@ -5,5 +5,19 @@
     "path": "shops/을지로보석.md",
     "jsonld_path": "shops/을지로보석.jsonld",
     "ai_exposure_status": "needs_update"
+  },
+  {
+    "shop_name": "몽탄",
+    "slug": "몽탄",
+    "path": "shops/몽탄.md",
+    "jsonld_path": "shops/몽탄.jsonld",
+    "ai_exposure_status": "needs_update"
+  },
+  {
+    "shop_name": "우래옥",
+    "slug": "우래옥",
+    "path": "shops/우래옥.md",
+    "jsonld_path": "shops/우래옥.jsonld",
+    "ai_exposure_status": "needs_update"
   }
 ]
