@@ -1,0 +1,20 @@
+[
+  {
+    "shop_name": "을지로보석",
+    "slug": "을지로보석",
+    "path": "shops/을지로보석.md",
+    "ai_exposure_status": "needs_update"
+  },
+  {
+    "shop_name": "몽탄",
+    "slug": "몽탄",
+    "path": "shops/몽탄.md",
+    "ai_exposure_status": "needs_update"
+  },
+  {
+    "shop_name": "우래옥",
+    "slug": "우래옥",
+    "path": "shops/우래옥.md",
+    "ai_exposure_status": "needs_update"
+  }
+]
